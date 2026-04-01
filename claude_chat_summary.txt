@@ -1,0 +1,74 @@
+Claude Chat Summary: ForenXChain (Lite) Initial Setup
+
+1. List of Commands & Why They Were Used
+----------------------------------------
+
+* Phase: Project Structure
+  Commands:
+  mkdir client server contracts
+  
+  Why: To create the necessary foundational folders for the three main parts of the project: the React frontend (client), Node.js backend (server), and the smart contracts (contracts).
+
+* Phase: Frontend Setup
+  Commands:
+  cd client
+  npm create vite@latest . -- --template react
+  
+  Why: Moves into the client directory and generates a fresh, fast React frontend using Vite directly inside that folder.
+
+* Phase: Backend Init
+  Commands:
+  cd ../server
+  npm init -y
+  
+  Why: Moves into the server directory and creates a default package.json file to manage backend dependencies.
+
+* Phase: Backend Dependencies
+  Commands:
+  npm install express mongoose multer cors dotenv ethers crypto-js exiftool-vendored
+  
+  Why: Installs the core backend stack: express (API), mongoose (MongoDB adapter), multer (Handling file uploads), crypto-js (SHA-256 hashing), exiftool-vendored (Forensics metadata extraction), ethers (Blockchain communication).
+
+* Phase: Backend Dev Tools
+  Commands:
+  npm install --save-dev nodemon
+  
+  Why: Installs a development tool that automatically restarts the backend server whenever code changes are saved.
+
+* Phase: Blockchain Troubleshooting
+  Commands:
+  npm uninstall hardhat @nomicfoundation/hardhat-toolbox
+  Remove-Item hardhat.config.* -Force
+  Remove-Item -Recurse ignition
+  
+  Why: The initial setup ran into version conflicts with Hardhat v3. These commands were used to completely purge the broken Hardhat installation, its config files, and the ignition folder using PowerShell.
+
+* Phase: Blockchain Reinstall
+  Commands:
+  npm install --save-dev hardhat@2.19.4 @nomicfoundation/hardhat-toolbox@4.0.0
+  
+  Why: Installs a stable, specific older version of Hardhat (v2.19.4) and its corresponding toolbox to ensure compatibility and avoid the previous errors.
+
+* Phase: Blockchain Init
+  Commands:
+  npx hardhat init
+  
+  Why: Generates the boilerplate Hardhat project files (contracts, scripts, tests) so you can start writing and testing the ForensicChain.sol smart contract.
+
+* Phase: Running the App
+  Commands:
+  npm run dev
+  
+  Why: Used to spin up the backend server locally for testing.
+
+
+3. Summary of the Chat & Implementation Steps
+---------------------------------------------
+
+The conversation focuses on the initial architecture and environment setup for ForenXChain (Lite), a blockchain-based digital forensic evidence tracker.
+
+What was accomplished:
+1. Three-Tier Architecture Setup: The project skeleton was successfully initialized with distinct boundaries: a React/Vite frontend, a Node.js/Express backend, and a Hardhat/Solidity blockchain layer.
+2. Database & Security Configuration: A MongoDB Atlas database was configured, the Network Access was updated to allow connections (0.0.0.0/0), and an ECONNREFUSED error was fixed by ensuring the .env connection string used the correct Atlas URI rather than a local instance.
+3. Overcoming Hardhat Conflicts: A significant portion of the chat involved troubleshooting a broken Hardhat v3 installation. This was resolved by forcing the removal of the newer version and downgrading to a stable Hardhat v2 environment. The hardhat.config.js was also adjusted to point to a local Ganache instance at http://127.0.0.1:7545.
+4. Forensic Integrations: The backend was pre-configured with critical forensic libraries—specifically crypto-js to generate immutable SHA-256 hashes for evidence and exiftool-vendored to automatically extract metadata from uploaded files.
