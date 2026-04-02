@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../utils/apiConfig';
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -30,7 +31,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/register', form);
+      const { data } = await axios.post(`${BASE_URL}/api/auth/register`, form);
 
       login(data);             // Auto login after register
       navigate('/dashboard');

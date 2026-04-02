@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../utils/apiConfig';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -30,13 +31,13 @@ const Dashboard = () => {
 
       if (isAdmin) {
         const [evResponse, usersResponse] = await Promise.all([
-          axios.get('http://localhost:5000/api/evidence/all', config),
-          axios.get('http://localhost:5000/api/admin/users', config)
+          axios.get(`${BASE_URL}/api/evidence/all`, config),
+          axios.get(`${BASE_URL}/api/admin/users`, config)
         ]);
         setEvidence(evResponse.data);
         setUsers(usersResponse.data);
       } else {
-        const response = await axios.get('http://localhost:5000/api/evidence/mine', config);
+        const response = await axios.get(`${BASE_URL}/api/evidence/mine`, config);
         setEvidence(response.data);
       }
     } catch (err) {
@@ -50,7 +51,7 @@ const Dashboard = () => {
   const handleDeleteEvidence = async (id) => {
     if (!window.confirm('Are you sure you want to delete this record?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/evidence/${id}`, {
+      await axios.delete(`${BASE_URL}/api/evidence/${id}`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       fetchDashboardData();

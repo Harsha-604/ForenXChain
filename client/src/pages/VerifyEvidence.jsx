@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { BASE_URL } from '../utils/apiConfig';
 
 const computeFileHash = async (file) => {
   const buffer = await file.arrayBuffer();
@@ -45,7 +46,7 @@ const VerifyEvidence = () => {
 
     try {
       const { data } = await axios.post(
-        'http://localhost:5000/api/evidence/verify',
+        `${BASE_URL}/api/evidence/verify`,
         { caseId, fileHash },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );

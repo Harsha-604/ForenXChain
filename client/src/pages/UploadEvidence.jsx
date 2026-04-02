@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ethers } from 'ethers';
 import { useAuth } from '../context/AuthContext';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../utils/contract';
+import { BASE_URL } from '../utils/apiConfig';
 
 const computeFileHash = async (file) => {
   const buffer = await file.arrayBuffer();
@@ -61,7 +62,7 @@ const UploadEvidence = () => {
 
       setStatus('saving-to-db');
       await axios.post(
-        'http://localhost:5000/api/evidence/upload',
+        `${BASE_URL}/api/evidence/upload`,
         {
           caseId,
           fileName: file.name,
