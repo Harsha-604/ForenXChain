@@ -52,7 +52,7 @@ ForenXChain/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ForenXChain.git
+   git clone https://github.com/Harsha-604/ForenXChain.git
    cd ForenXChain
    ```
 
