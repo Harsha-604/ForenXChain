@@ -109,11 +109,7 @@ npm run dev
 cd client
 npm run dev
 ```
-
-## 📜 License
-
-This project is licensed under the [ISC](LICENSE) License.
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+check 
