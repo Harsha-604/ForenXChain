@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ethers } from 'ethers';
+import { Upload, FileUp, Loader2, Link2, Hammer, Database, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../utils/contract';
 import { BASE_URL } from '../utils/apiConfig';
@@ -85,15 +86,15 @@ const UploadEvidence = () => {
 
   return (
     <div className="animate-fade">
-      <div className="welcome-banner glass-card">
-        <h2>📤 Upload New Evidence</h2>
-        <p>Register a permanent file fingerprint on the Ethereum blockchain.</p>
+      <div className="welcome-banner panel panel-static">
+        <h2>Upload new evidence</h2>
+        <p className="lede">Register a permanent file fingerprint on the Ethereum blockchain.</p>
       </div>
 
-      <div className="info-section glass-card" style={{ maxWidth: 'auto' }}>
+      <div className="info-section panel panel-static">
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Case Identifier</label>
+            <label>Case identifier</label>
             <input 
               type="text"  
               value={caseId} 
@@ -102,14 +103,14 @@ const UploadEvidence = () => {
             />
           </div>
           <div className="form-group" style={{ marginTop: '1.5rem' }}>
-            <label>Evidence Source (File)</label>
+            <label>Evidence source (file)</label>
             <div className="file-upload-wrapper">
               <div className="file-input-custom">
                 <input type="file" onChange={handleFileChange} required />
                 <div className="file-info">
-                  <div style={{ fontSize: '2rem' }}>📁</div>
-                  <span>{file ? file.name : 'Click or Drag file to securely hash'}</span>
-                  <small>SHA-256 fingerprint will be generated automatically</small>
+                  <FileUp size={28} />
+                  <span>{file ? file.name : 'Click or drag a file to securely hash'}</span>
+                  <small>A SHA-256 fingerprint is generated automatically</small>
                 </div>
               </div>
             </div>
@@ -117,12 +118,12 @@ const UploadEvidence = () => {
 
           <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
 
-            {status === 'hashing' && <p className="status-text animate-fade">⏳ Computing forensic signature...</p>}
-            {status === 'storing-on-chain' && <p className="status-text animate-fade">⛓️ Proposing Block Transaction (Awaiting Signature)...</p>}
-            {status === 'waiting-for-block' && <p className="status-text animate-fade">🛠️ Mining transaction record on Ethereum...</p>}
-            {status === 'saving-to-db' && <p className="status-text animate-fade">💾 Indexing record in forensic database...</p>}
-            {status === 'success' && <p className="status-success animate-fade">✅ Evidence secured! Redirecting...</p>}
-            {status === 'error' && <p className="status-error animate-fade">❌ {error}</p>}
+            {status === 'hashing' && <p className="status-text animate-fade"><Loader2 size={15} className="spin" /> Computing forensic signature…</p>}
+            {status === 'storing-on-chain' && <p className="status-text animate-fade"><Link2 size={15} /> Proposing block transaction (awaiting signature)…</p>}
+            {status === 'waiting-for-block' && <p className="status-text animate-fade"><Hammer size={15} /> Mining transaction record on Ethereum…</p>}
+            {status === 'saving-to-db' && <p className="status-text animate-fade"><Database size={15} /> Indexing record in forensic database…</p>}
+            {status === 'success' && <p className="status-success animate-fade"><CheckCircle2 size={15} /> Evidence secured. Redirecting…</p>}
+            {status === 'error' && <p className="status-error animate-fade"><XCircle size={15} /> {error}</p>}
           </div>
 
           <button 
@@ -130,7 +131,7 @@ const UploadEvidence = () => {
             className="btn-primary" 
             disabled={!fileHash || ['hashing', 'storing-on-chain', 'waiting-for-block', 'saving-to-db'].includes(status)}
           >
-            Authenticate & Secure Evidence
+            Authenticate & secure evidence
           </button>
         </form>
       </div>

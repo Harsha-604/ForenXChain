@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { LayoutGrid, Upload, ScanSearch, LogOut, Link2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Layout = ({ children }) => {
@@ -10,24 +11,23 @@ const Layout = ({ children }) => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
   const navItems = [
-    { icon: '📊', label: 'Dashboard', path: '/dashboard' },
-    { icon: '📤', label: 'Upload', path: '/upload' },
-    { icon: '🔍', label: 'Verify', path: '/verify' },
+    { icon: LayoutGrid, label: 'Dashboard', path: '/dashboard' },
+    { icon: Upload, label: 'Upload', path: '/upload' },
+    { icon: ScanSearch, label: 'Verify', path: '/verify' },
   ];
 
   return (
     <div className="layout-wrapper">
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-        <div className="sidebar-logo">
-          <span onClick={() => setIsCollapsed(!isCollapsed)} style={{ cursor: 'pointer' }}>⛓️</span>
-          {!isCollapsed && "ForenXChain"}
+        <div className="sidebar-logo" onClick={() => setIsCollapsed(!isCollapsed)}>
+          <span className="sidebar-logo-mark"><Link2 size={16} /></span>
+          {!isCollapsed && 'ForenXChain'}
         </div>
 
         <nav className="nav-links">
@@ -38,23 +38,21 @@ const Layout = ({ children }) => {
               onClick={() => navigate(item.path)}
               title={isCollapsed ? item.label : ''}
             >
-              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-icon"><item.icon size={18} /></span>
               {!isCollapsed && <span className="nav-label">{item.label}</span>}
             </div>
           ))}
         </nav>
 
         <div className="sidebar-footer">
-          {!isCollapsed && (
-            <div style={{ marginBottom: '1.25rem', padding: '0 0.5rem' }}>
-              <span style={{ fontSize: '0.65rem', color: 'var(--muted)', letterSpacing: '0.1em' }}>SIGNED IN AS</span>
-              <p style={{ fontWeight: '600', margin: '0.2rem 0' }}>{user?.name}</p>
-              <span className="status-badge info" style={{ transform: 'scale(0.85)', transformOrigin: 'left' }}>{user?.role}</span>
-            </div>
-          )}
+          <div className="sidebar-user">
+            <span className="sidebar-user-label">Signed in as</span>
+            <p className="sidebar-user-name">{user?.name}</p>
+            <span className="status-badge info">{user?.role}</span>
+          </div>
 
           <button onClick={handleLogout} className="btn-logout">
-            🚪 {!isCollapsed && <span className="logout-text">Logout</span>}
+            <LogOut size={16} /> {!isCollapsed && <span className="logout-text">Logout</span>}
           </button>
         </div>
       </div>
@@ -67,4 +65,3 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
-

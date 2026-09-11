@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { ScanSearch, Loader2, XCircle, ShieldCheck, ShieldAlert, Link2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL } from '../utils/apiConfig';
 
@@ -60,15 +61,15 @@ const VerifyEvidence = () => {
 
   return (
     <div className="animate-fade">
-      <div className="welcome-banner glass-card">
-        <h2>🔍 Verify Authenticity</h2>
-        <p>Verify a file fingerprint against the permanent blockchain database.</p>
+      <div className="welcome-banner panel panel-static">
+        <h2>Verify authenticity</h2>
+        <p className="lede">Check a file fingerprint against the permanent blockchain record.</p>
       </div>
 
-      <div className="info-section glass-card" style={{ maxWidth: 'auto' }}>
+      <div className="info-section panel panel-static">
         <form onSubmit={handleVerify}>
           <div className="form-group">
-            <label>Case Identifier</label>
+            <label>Case identifier</label>
             <input 
               type="text" 
               value={caseId} 
@@ -77,38 +78,37 @@ const VerifyEvidence = () => {
             />
           </div>
           <div className="form-group" style={{ marginTop: '1.5rem' }}>
-            <label>Select File to Verify</label>
+            <label>Select file to verify</label>
             <div className="file-upload-wrapper">
               <div className="file-input-custom">
                 <input type="file" onChange={handleFileChange} required />
                 <div className="file-info">
-                  <div style={{ fontSize: '2rem' }}>🔎</div>
-                  <span>{fileHash ? 'File Fingeprinted' : 'Drag file here to compare signature'}</span>
-                  <small>The hash will be checked against the blockchain records</small>
+                  <ScanSearch size={28} />
+                  <span>{fileHash ? 'File fingerprinted' : 'Drag a file here to compare its signature'}</span>
+                  <small>The hash is checked against the blockchain record</small>
                 </div>
               </div>
             </div>
           </div>
 
           <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem' }}>
-            {status === 'hashing' && <p className="status-text animate-fade">⏳ Generating digital fingerprint...</p>}
-            {status === 'verifying' && <p className="status-text animate-fade">⏳ Querying blockchain records...</p>}
-            {status === 'error' && <p className="status-error animate-fade">❌ {error}</p>}
+            {status === 'hashing' && <p className="status-text animate-fade"><Loader2 size={15} className="spin" /> Generating digital fingerprint…</p>}
+            {status === 'verifying' && <p className="status-text animate-fade"><Loader2 size={15} className="spin" /> Querying blockchain records…</p>}
+            {status === 'error' && <p className="status-error animate-fade"><XCircle size={15} /> {error}</p>}
 
             {result && (
-              <div className={`verify-result glass-card animate-fade ${result.isMatch ? 'match' : 'no-match'}`} style={{ borderLeftWidth: '5px', borderRadius: '8px' }}>
-                <h3 style={{ color: result.isMatch ? 'var(--success)' : 'var(--danger)', marginBottom: '1rem' }}>
-                  {result.isMatch ? '✅ CHAIN OF CUSTODY VERIFIED' : '❌ TAMPERING DETECTED'}
+              <div className={`verify-result panel panel-static animate-fade`} style={{ borderLeftColor: result.isMatch ? 'var(--stamp-green)' : 'var(--stamp-red)' }}>
+                <h3 style={{ color: result.isMatch ? 'var(--stamp-green)' : 'var(--stamp-red)' }}>
+                  {result.isMatch ? <ShieldCheck size={19} /> : <ShieldAlert size={19} />}
+                  {result.isMatch ? 'Chain of custody verified' : 'Tampering detected'}
                 </h3>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
-                  {result.isMatch && result.txHash && (
-                    <div className="hash-display" style={{ background: 'rgba(63, 185, 80, 0.05)', borderColor: 'var(--success)' }}>
-                      <label style={{ fontSize: '0.70rem', color: 'var(--success)', display: 'block', marginBottom: '0.2rem' }}>⛓️ TRANSACTION PROOF</label>
-                      <code style={{ fontSize: '0.75rem' }}>{result.txHash}</code>
-                    </div>
-                  )}
-                </div>
+                {result.isMatch && result.txHash && (
+                  <div className="hash-display" style={{ background: 'var(--stamp-green-tint)', borderColor: 'var(--stamp-green)' }}>
+                    <label style={{ color: 'var(--stamp-green)' }}><Link2 size={12} /> Transaction proof</label>
+                    <code style={{ fontSize: '0.75rem' }}>{result.txHash}</code>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -118,7 +118,7 @@ const VerifyEvidence = () => {
             className="btn-primary" 
             disabled={!fileHash || status === 'verifying' || status === 'hashing'}
           >
-            Execute Verification
+            Run verification
           </button>
         </form>
       </div>

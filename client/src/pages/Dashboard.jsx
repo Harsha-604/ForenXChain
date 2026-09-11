@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Upload, ScanSearch, FolderOpen, Users, CheckCircle2, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { BASE_URL } from '../utils/apiConfig';
 
@@ -62,67 +63,72 @@ const Dashboard = () => {
 
   return (
     <div className="animate-fade">
-      {/* Action Banner */}
-      <div className="welcome-banner glass-card">
-        <h2>Welcome back, {user?.name} 👋</h2>
-        <p style={{ color: 'var(--primary)', fontWeight: '600', marginBottom: '0.5rem' }}>
-          {isAdmin ? "MASTER ADMINISTRATIVE PORTAL" : "INVESTIGATOR DASHBOARD"}
-        </p>
-        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', maxWidth: '600px' }}>
-          {isAdmin 
-            ? "You have full override authority over the digital chain of custody records and personnel access." 
-            : "Access your secured forensic fingerprints and verify the integrity of digital evidence."}
+      {/* Page header */}
+      <div className="welcome-banner panel panel-static">
+        <div className="role-stamp">{isAdmin ? 'Master admin' : 'Investigator'}</div>
+        <h2>Welcome back, {user?.name}</h2>
+        <p className="lede">
+          {isAdmin
+            ? 'Full override authority over the chain-of-custody records and personnel access.'
+            : 'Your secured forensic fingerprints, and tools to verify the integrity of digital evidence.'}
         </p>
       </div>
 
-      {/* Quick Action Cards */}
+      {/* Quick actions */}
       <div className="card-grid">
-        <div className="action-card glass-card" onClick={() => navigate('/upload')}>
-          <div className="card-icon">📤</div>
-          <h3>Secure Upload</h3>
-          <p>Generate SHA-256 fingerprints and commit to blockchain.</p>
+        <div className="action-card panel" onClick={() => navigate('/upload')}>
+          <div className="card-icon"><Upload size={20} /></div>
+          <div>
+            <h3>Secure upload</h3>
+            <p>Generate a SHA-256 fingerprint and commit it to the blockchain.</p>
+          </div>
         </div>
-        <div className="action-card glass-card" onClick={() => navigate('/verify')}>
-          <div className="card-icon">🔍</div>
-          <h3>Verify Integrity</h3>
-          <p>Instant cross-reference against immutable ledger.</p>
+        <div className="action-card panel" onClick={() => navigate('/verify')}>
+          <div className="card-icon"><ScanSearch size={20} /></div>
+          <div>
+            <h3>Verify integrity</h3>
+            <p>Cross-reference a file against the immutable ledger.</p>
+          </div>
         </div>
       </div>
 
-      {/* Data Visualisation Section */}
+      {/* Data section */}
       <div className="data-section">
         {loading ? (
-          <p className="status-text">Synchronizing with blockchain network...</p>
+          <p className="status-text">Synchronizing with blockchain network…</p>
         ) : error ? (
           <p className="status-error">{error}</p>
         ) : (
           <div className="animate-fade">
             {/* EVIDENCE TABLE */}
-            <div className="info-section glass-card">
-              <h3>{isAdmin ? "📂 Global Evidence Ledger" : "📂 My Evidence History"}</h3>
+            <div className="info-section panel panel-static">
+              <div className="info-section-header">
+                <FolderOpen size={18} />
+                <h3>{isAdmin ? 'Global evidence ledger' : 'My evidence history'}</h3>
+              </div>
               <div className="table-responsive">
                 <table className="data-table">
                   <thead>
                     <tr>
                       <th>Case ID</th>
-                      <th>File Name</th>
-                      {isAdmin && <th>Uploaded By</th>}
+                      <th>File name</th>
+                      {isAdmin && <th>Uploaded by</th>}
                       <th>Timestamp</th>
-                      <th>Blockchain Proof</th>
+                      <th>Blockchain proof</th>
                       {isAdmin && <th>Actions</th>}
                     </tr>
                   </thead>
                   <tbody>
                     {evidence.map((ev) => (
                       <tr key={ev._id}>
-                        <td style={{ color: 'var(--primary)', fontWeight: '600' }}>{ev.caseId}</td>
-                        <td style={{ fontWeight: '500' }}>{ev.fileName}</td>
+                        <td className="cell-case">{ev.caseId}</td>
+                        <td className="cell-file">{ev.fileName}</td>
                         {isAdmin && <td>{ev.uploadedBy?.name || 'Unknown'}</td>}
                         <td>{new Date(ev.timestamp).toLocaleDateString()}</td>
                         <td>
                           {ev.txHash ? (
-                            <span className="status-badge success" title={ev.txHash}>
-                              ✅ {ev.txHash.substring(0, 10)}... (B#{ev.blockNumber})
+                            <span className="status-badge success cell-hash" title={ev.txHash}>
+                              <CheckCircle2 size={12} /> {ev.txHash.substring(0, 10)}… (B#{ev.blockNumber})
                             </span>
                           ) : (
                             <span className="status-badge info">Pending</span>
@@ -130,15 +136,17 @@ const Dashboard = () => {
                         </td>
                         {isAdmin && (
                           <td>
-                            <button className="btn-delete" onClick={() => handleDeleteEvidence(ev._id)} title="Delete Record">🗑️</button>
+                            <button className="btn-delete" onClick={() => handleDeleteEvidence(ev._id)} title="Delete record">
+                              <Trash2 size={15} />
+                            </button>
                           </td>
                         )}
                       </tr>
                     ))}
                     {evidence.length === 0 && (
                       <tr>
-                        <td colSpan={isAdmin ? 6 : 4} style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted)' }}>
-                          No forensic records detected in the local buffer.
+                        <td colSpan={isAdmin ? 6 : 4} style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted-paper)' }}>
+                          No forensic records in the local buffer yet.
                         </td>
                       </tr>
                     )}
@@ -149,26 +157,29 @@ const Dashboard = () => {
 
             {/* USERS TABLE (ADMIN ONLY) */}
             {isAdmin && (
-              <div className="info-section glass-card" style={{ marginTop: '2.5rem' }}>
-                <h3>👥 Registered Personnel</h3>
+              <div className="info-section panel panel-static" style={{ marginTop: '2rem' }}>
+                <div className="info-section-header">
+                  <Users size={18} />
+                  <h3>Registered personnel</h3>
+                </div>
                 <div className="table-responsive">
                   <table className="data-table">
                     <thead>
                       <tr>
-                        <th>Personnel Name</th>
-                        <th>Email Address</th>
-                        <th>Access Level</th>
-                        <th>Authorized Since</th>
+                        <th>Personnel name</th>
+                        <th>Email address</th>
+                        <th>Access level</th>
+                        <th>Authorized since</th>
                       </tr>
                     </thead>
                     <tbody>
                       {users.map((u) => (
                         <tr key={u._id}>
-                          <td style={{ fontWeight: '600' }}>{u.name}</td>
+                          <td className="cell-file">{u.name}</td>
                           <td>{u.email}</td>
                           <td>
                             <span className={`status-badge ${u.role === 'admin' ? 'success' : 'info'}`}>
-                              {u.role.toUpperCase()}
+                              {u.role}
                             </span>
                           </td>
                           <td>{new Date(u.createdAt).toLocaleDateString()}</td>
